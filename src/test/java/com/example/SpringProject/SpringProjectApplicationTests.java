@@ -13,6 +13,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 class SpringProjectApplicationTests {
@@ -30,6 +34,8 @@ class SpringProjectApplicationTests {
 		client.setName(clientName);
 		client.setPhoneNumber("01793932102");
 		client.setAge(19);
+		client.setEmail("moritzjunger@gmail.com");
+		client.setAppointmentDateTime(LocalDateTime.of(2023,9,23,15,45));
 
 		clientRepository.save(client);
 
@@ -63,10 +69,11 @@ class SpringProjectApplicationTests {
 		secondClient.setAge(20);
 		secondClient.setPhoneNumber("0178919387");
 		secondClient.setEmail("annabauer@email.com");
+		secondClient.setAppointmentDateTime(LocalDateTime.of(2023,8,23,15,45));
 
 		TestRestTemplate testRestTemplate = new TestRestTemplate();
-		ResponseEntity<Client> response = testRestTemplate.postForEntity("http://localhost:8080/clients", secondClient, Client.class);
-		Assertions.assertEquals(HttpStatus.OK, response.getStatusCode() );
+		ResponseEntity<String> response = testRestTemplate.postForEntity("http://localhost:8080/clients", secondClient, String.class);
+		Assertions.assertEquals(HttpStatus.CREATED, response.getStatusCode() );
 
 		ResponseEntity<Client> clientEntity
 				= testRestTemplate.getForEntity("http://localhost:8080/clients/2", Client.class);
@@ -75,6 +82,9 @@ class SpringProjectApplicationTests {
 		Assertions.assertEquals("Anna Bauer", clientEntity.getBody().getName());
 		Assertions.assertEquals(20, clientEntity.getBody().getAge());
 		Assertions.assertEquals("0178919387", clientEntity.getBody().getPhoneNumber());
+		Assertions.assertEquals("annabauer@email.com", clientEntity.getBody().getEmail());
+		Assertions.assertEquals(LocalDateTime.of(2023,8,23,15,45), clientEntity.getBody().getAppointmentDateTime());
+
 
 
 
@@ -99,6 +109,8 @@ class SpringProjectApplicationTests {
 		secondClient.setName("");
 		secondClient.setAge(10);
 		secondClient.setPhoneNumber("01793932102");
+		secondClient.setEmail("hans@gmail.com");
+		secondClient.setAppointmentDateTime(LocalDateTime.of(2023,10,23,15,45));
 
 		TestRestTemplate testRestTemplate = new TestRestTemplate();
 		ResponseEntity<Client> response = testRestTemplate.postForEntity("http://localhost:8080/clients", secondClient, Client.class);
@@ -108,18 +120,32 @@ class SpringProjectApplicationTests {
 		thirdClient.setName("John Cube");
 		thirdClient.setAge(3);
 		thirdClient.setPhoneNumber("01793932102");
+		thirdClient.setEmail("johncube@email.com");
+		thirdClient.setAppointmentDateTime(LocalDateTime.of(2023,11,23,15,45));
 
 		response = testRestTemplate.postForEntity("http://localhost:8080/clients", thirdClient, Client.class);
 		Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode() );
 
 
 		Client fourthClient = new Client();
-		fourthClient.setName("John Cube");
+		fourthClient.setName("Anna Cube");
 		fourthClient.setAge(10);
 		fourthClient.setPhoneNumber("");
+		fourthClient.setEmail("annacube@email.com");
+		fourthClient.setAppointmentDateTime(LocalDateTime.of(2023,12,23,15,45));
 
 		response = testRestTemplate.postForEntity("http://localhost:8080/clients", fourthClient, Client.class);
 		Assertions.assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode() );
+
+		Client fifthClient = new Client();
+		fifthClient.setName("Sara Cube");
+		fifthClient.setAge(10);
+		fifthClient.setPhoneNumber("01830983829");
+		fifthClient.setEmail("saracube@email.com");
+		fifthClient.setAppointmentDateTime(LocalDateTime.of(2023,9,23,15,45));
+
+		ResponseEntity<String> responseString = testRestTemplate.postForEntity("http://localhost:8080/clients", fifthClient, String.class);
+		Assertions.assertEquals(HttpStatus.CONFLICT, responseString.getStatusCode() );
 
 
 

@@ -6,6 +6,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.expression.spel.support.ReflectivePropertyAccessor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +17,10 @@ public interface ClientRepository extends CrudRepository<Client, Long> {
 
   //  @Query("SELECT c FROM Client c WHERE c.email = ?")
     Optional<Client> findClientByEmail(String email);
+
+    Optional<Client> findClientByAppointmentDateTime(LocalDateTime appointmentDateTime);
+
+
 
 
 }

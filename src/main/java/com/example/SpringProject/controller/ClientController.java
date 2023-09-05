@@ -5,35 +5,50 @@ import com.example.SpringProject.repository.ClientRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.Iterator;
-import java.util.List;
+import java.time.LocalDateTime;
+
 import java.util.Optional;
 
 @RestController
 @RequestMapping("/clients")
 @CrossOrigin
 public class ClientController {
+
+    private final ClientRepository clientRepository;
     @Autowired // Spring weiß, dass das eine Klasse (Bean) existiert im ApplicationContext und fügt diese automatisch ein.
-               // Inversion of Control
-    ClientRepository clientRepository;
+    // Inversion of Control
+    public ClientController(ClientRepository clientRepository)
+    {
+        this.clientRepository = clientRepository;
+    }
 
     @PostMapping("") // RequestBody -> Informationen im Body werden gelesen und wird in das Java Object Client konvertiert
-    public void createClient(@Valid @RequestBody Client client)
+    public ResponseEntity<String> createClient(@Valid @RequestBody Client client)
     {
         Optional<Client> refClient = clientRepository.findClientByEmail(client.getEmail());
 
         if(refClient.isPresent())
         {
-            throw new IllegalArgumentException("Email already taken");
+            return new ResponseEntity<>("Email already taken.", HttpStatus.CONFLICT);
+
+        }
+
+        refClient =  clientRepository.findClientByAppointmentDateTime(client.getAppointmentDateTime());
+        if(refClient.isPresent())
+        {
+            return new ResponseEntity<>("This date is already reserved.", HttpStatus.CONFLICT);
+
 
         }
 
         else
         {
             clientRepository.save(client);
+            return new ResponseEntity<>("The appointment was booked for the client.", HttpStatus.CREATED);
         }
 
 
@@ -50,10 +65,21 @@ public class ClientController {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Client with this id not found");
     }
 
-    @GetMapping("/getAll")
+    @GetMapping()
     public Iterable<Client> readAllClients()
     {
         return clientRepository.findAll();
+    }
+
+    @GetMapping("/appointments/{appointmentDateTime}")     // Mit PathVariable sagen wir Spring, dass es in unserem Pfad nachschauen soll.
+    public Client readClient(@PathVariable LocalDateTime clientAppointmentDateTime)
+    {
+        Optional<Client> client = clientRepository.findClientByAppointmentDateTime(clientAppointmentDateTime);
+        if(client.isPresent())
+        {
+            return client.get();
+        }
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No date is set for this time");
     }
 
 
@@ -90,16 +116,6 @@ public class ClientController {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Client with this id not found");
 
     }
-
-
-
-    private boolean isPhoneNumberValid(String phoneNumber)
-    {
-        return phoneNumber.length() <= 13;
-
-
-    }
-
 
 
 }
