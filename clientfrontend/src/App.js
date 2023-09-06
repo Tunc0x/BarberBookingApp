@@ -6,14 +6,15 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 
 
 
+
 function App() {
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs} >
     <div className="App">
     
-     <AppBar/>
+     <AppBar/> 
      
-     <Client/>
+     
    
     </div>
     </LocalizationProvider>
