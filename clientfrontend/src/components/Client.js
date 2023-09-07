@@ -15,26 +15,13 @@ import dayjs from 'dayjs';
 
 
 
-export default function Client() {
+export default function Client({showDeleteButton, setShowDeleteButton}) {
     const paperStyle = { padding: '50px 20px', width: 600, margin: "20px auto" }
     const [name, setName] = React.useState('')
     const [email, setEmail] = React.useState('')
     const [age, setAge] = React.useState('')
     const [phoneNumber, setPhoneNumber] = React.useState('')
     const [rawAppointmentDateTime, setRawAppointmentDateTime] = React.useState(dayjs())
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     const [clients, setClients] = React.useState([])
 
@@ -73,6 +60,8 @@ export default function Client() {
             }
             )
     }, [])
+
+
 
 
 
@@ -143,9 +132,13 @@ export default function Client() {
                                 Date Time: {client.appointmentDateTime}<br />
                             </div>
 
+                            {showDeleteButton ?(
+                        
                             <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleDeleteClick(client.id)}>
                                 Delete
                             </Button>
+                            ) : null}
+
                         </div>
                     </Paper>
                 ))}

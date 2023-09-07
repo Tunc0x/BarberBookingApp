@@ -12,12 +12,35 @@ import Client from './Client';
 export default function Appbar() {
   const [showSignIn, setShowSignIn] = useState(false);
   const [showClient, setShowClient] = useState(true);
+  const [showDeleteButton, setShowDeleteButton] = useState(false);
+  const [showLoginButton, setShowLoginButton] = useState(true);
+
+
 
   const handleLoginClick = () => {
     setShowSignIn(true);
     setShowClient(false);
    
   } 
+
+  const handleLogoutClick = () => 
+  {
+    setShowDeleteButton(false);
+    setShowLoginButton(true);
+
+  }
+
+  const handleLoginSubmitClick = (isOwnerAuthenticated) =>
+  {
+    setShowSignIn(false);
+    setShowClient(true);
+    setShowDeleteButton(isOwnerAuthenticated);
+    setShowLoginButton(false);
+  }
+
+
+
+  
 
 
   return (
@@ -36,12 +59,21 @@ export default function Appbar() {
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Barber apppointment
           </Typography>
+          
+          
+          { showLoginButton ?(
+
+          
           <Button color="inherit" onClick={handleLoginClick}>Login</Button>
+
+        ) : <Button color="inherit" onClick={handleLogoutClick}>Logout</Button>}
+
+
         </Toolbar>
       </AppBar>
 
-      {showSignIn && <SignIn />}
-      {showClient && <Client />}
+      {showSignIn && <SignIn onLoginSubmit={handleLoginSubmitClick}/>}
+      {showClient && <Client showDeleteButton={showDeleteButton} setShowDeleteButton={setShowDeleteButton}/>}
     
 
     </Box>

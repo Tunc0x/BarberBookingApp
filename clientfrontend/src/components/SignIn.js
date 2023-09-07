@@ -12,6 +12,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { AppBar } from '@mui/material';
 
 function Copyright(props) {
   return (
@@ -26,18 +27,48 @@ function Copyright(props) {
   );
 }
 
-// TODO remove, this demo shouldn't need to reset the theme.
+let ownerAccess;
+
+
 
 const defaultTheme = createTheme();
 
-export default function SignIn() {
+export default function SignIn(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+
+    const email = data.get('email')
+    const password = data.get('password')
+
+    const loginRequest = {email, password}
+    console.log(loginRequest)
+
+    fetch("http://localhost:8080/owner/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(loginRequest)
+        }).then(response => response.json()).then(isValidLogin => {
+          
+          console.log("Login valid:", isValidLogin)
+          if(isValidLogin){
+            console.log("access granted")
+            ownerAccess = true;
+
+            props.onLoginSubmit(true)
+            
+            
+          } else{
+            console.log("access denied")
+            ownerAccess = false;
+            props.onLoginSubmit(true)
+          }
+
+        }).catch(error => {
+          console.error("There was a fetch call error:", error);
+      });
+
+
   };
 
   return (
