@@ -12,10 +12,13 @@ import { Co2Sharp } from '@mui/icons-material';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import dayjs from 'dayjs';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import PendingActionsIcon from '@mui/icons-material/PendingActions';
+import Avatar from '@mui/material/Avatar';
 
 
 
-export default function Client({showDeleteButton, setShowDeleteButton}) {
+export default function Client({ showDeleteButton, setShowDeleteButton }) {
     const paperStyle = { padding: '50px 20px', width: 600, margin: "20px auto" }
     const [name, setName] = React.useState('')
     const [email, setEmail] = React.useState('')
@@ -77,29 +80,41 @@ export default function Client({showDeleteButton, setShowDeleteButton}) {
             autoComplete="off"
         >
             <Paper elevation={3} style={paperStyle}>
-                <h1 style={{ color: "blue" }}><u>Register</u></h1>
-                <TextField id="outlined-basic" margin="normal" label="Your Name" variant="outlined" fullWidth
+
+                <CalendarMonthIcon fontSize='large' color='primary'></CalendarMonthIcon>
+
+                <h3 style={{ color: "blue" }}><u>Book an Appointment</u></h3>
+
+
+
+
+
+                <TextField id="outlined-basic" margin="normal" label="Full Name" variant="outlined" fullWidth
                     value={name}
                     onChange={(e) => setName(e.target.value)}
+                    required
                 />
-                <TextField id="outlined-basic" margin="normal" label="Your Email" variant="outlined" fullWidth
+                <TextField id="outlined-basic" margin="normal" label="Email Adress" variant="outlined" fullWidth
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
+                    required
                 />
 
-                <TextField id="outlined-basic" margin="normal" label="Your Age" variant="outlined" fullWidth
+                <TextField id="outlined-basic" margin="normal" label="Age" variant="outlined" fullWidth
                     value={age}
                     onChange={(e) => setAge(e.target.value)}
+                    required
                 />
 
 
-                <TextField id="outlined-basic" margin="normal" label="Your Phone Number" variant="outlined" fullWidth
+                <TextField id="outlined-basic" margin="normal" label="Phone Number" variant="outlined" fullWidth
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
+                    required
                 />
 
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '20px' }}>
-                    <DateTimePicker 
+                    <DateTimePicker
                         label="Pick your date time"
                         value={rawAppointmentDateTime}
                         onChange={datetime => setRawAppointmentDateTime(datetime)}
@@ -119,7 +134,14 @@ export default function Client({showDeleteButton, setShowDeleteButton}) {
 
             <Paper elevation={3} style={paperStyle}>
 
-                <h1>Clients</h1>
+                
+                    <PendingActionsIcon fontSize='large' />
+            
+
+                <Typography component="h1" variant="h5">
+                    Clients
+                </Typography>
+
                 {clients.map(client => (
                     <Paper elevation={6} style={{ margin: "10px", padding: "15px", textAlign: "left" }} key={client.id}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -132,11 +154,11 @@ export default function Client({showDeleteButton, setShowDeleteButton}) {
                                 Date Time: {client.appointmentDateTime}<br />
                             </div>
 
-                            {showDeleteButton ?(
-                        
-                            <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleDeleteClick(client.id)}>
-                                Delete
-                            </Button>
+                            {showDeleteButton ? (
+
+                                <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleDeleteClick(client.id)}>
+                                    Delete
+                                </Button>
                             ) : null}
 
                         </div>
