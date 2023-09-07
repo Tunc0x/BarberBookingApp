@@ -1,6 +1,8 @@
 package com.example.SpringProject.controller;
 
 import com.example.SpringProject.clients.Client;
+import com.example.SpringProject.error.EntityNotFoundException;
+import com.example.SpringProject.error.DuplicateEntryException;
 import com.example.SpringProject.repository.ClientRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,20 +29,21 @@ public class ClientController {
     }
 
     @PostMapping("") // RequestBody -> Informationen im Body werden gelesen und wird in das Java Object Client konvertiert
-    public ResponseEntity<String> createClient(@Valid @RequestBody Client client)
-    {
+    public ResponseEntity<String> createClient(@Valid @RequestBody Client client) throws DuplicateEntryException {
         Optional<Client> refClient = clientRepository.findClientByEmail(client.getEmail());
 
         if(refClient.isPresent())
         {
-            return new ResponseEntity<>("Email already taken.", HttpStatus.CONFLICT);
+
+            throw new DuplicateEntryException("Email already exists.");
 
         }
 
         refClient =  clientRepository.findClientByAppointmentDateTime(client.getAppointmentDateTime());
         if(refClient.isPresent())
         {
-            return new ResponseEntity<>("This date is already reserved.", HttpStatus.CONFLICT);
+
+            throw new DuplicateEntryException("This date is already reserved.");
 
 
         }
@@ -55,14 +58,13 @@ public class ClientController {
     }
 
     @GetMapping("/{clientId}")     // Mit PathVariable sagen wir Spring, dass es in unserem Pfad nachschauen soll.
-    public Client readClient(@PathVariable Long clientId)
-    {
+    public Client readClient(@PathVariable Long clientId) throws EntityNotFoundException {
         Optional<Client> client = clientRepository.findById(clientId);
         if(client.isPresent())
         {
             return client.get();
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Client with this id not found");
+        throw new EntityNotFoundException("Client with this id not found");
     }
 
     @GetMapping()
@@ -85,12 +87,11 @@ public class ClientController {
 
 
     @PutMapping("/{clientId}")
-    public void updateClientById(@Valid @RequestBody Client clientUpdate, @PathVariable Long clientId)
-    {
+    public void updateClientById(@Valid @RequestBody Client clientUpdate, @PathVariable Long clientId) throws EntityNotFoundException {
         Optional<Client> client = clientRepository.findById(clientId);
         if(!client.isPresent())
         {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Client with this id not found");
+            throw new EntityNotFoundException("Client with this id not found");
 
         }
         Client clientInstance = client.get();
@@ -106,14 +107,14 @@ public class ClientController {
     }
 
     @DeleteMapping("/{clientId}")
-    public void deleteClient( @PathVariable Long clientId){
+    public void deleteClient( @PathVariable Long clientId) throws EntityNotFoundException {
         Optional<Client> client = clientRepository.findById(clientId);
         if(client.isPresent())
         {
             clientRepository.deleteById(clientId);
             return;
         }
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Client with this id not found");
+        throw new EntityNotFoundException("Client with this id not found");
 
     }
 
