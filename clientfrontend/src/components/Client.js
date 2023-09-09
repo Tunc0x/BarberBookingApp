@@ -15,11 +15,14 @@ import dayjs from 'dayjs';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import Avatar from '@mui/material/Avatar';
+import Grid from '@mui/material/Grid';
+import Appointments from './Appointments';
 
 
 
 export default function Client({ showDeleteButton, setShowDeleteButton }) {
-    const paperStyle = { padding: '50px 20px', width: 600, margin: "20px auto" }
+    const paperStyleClient = { padding: '50px 20px', width: 600, margin: "20px auto" }
+    const paperStyleAppointment = { padding: '50px 20px', width: 600, margin: "20px auto" }
     const [name, setName] = React.useState('')
     const [email, setEmail] = React.useState('')
     const [age, setAge] = React.useState('')
@@ -79,39 +82,64 @@ export default function Client({ showDeleteButton, setShowDeleteButton }) {
             noValidate
             autoComplete="off"
         >
-            <Paper elevation={3} style={paperStyle}>
+            <Paper elevation={3} style={paperStyleClient}>
 
                 <CalendarMonthIcon fontSize='large' color='primary'></CalendarMonthIcon>
 
                 <h3 style={{ color: "blue" }}><u>Book an Appointment</u></h3>
 
 
+                <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                        <TextField
+                            id="outlined-basic"
 
+                            label="Full Name"
+                            variant="outlined"
+                            fullWidth
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            required
+                        />
+                    </Grid>
 
+                    <Grid item xs={12}>
+                        <TextField
+                            id="outlined-basic"
 
-                <TextField id="outlined-basic" margin="normal" label="Full Name" variant="outlined" fullWidth
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                />
-                <TextField id="outlined-basic" margin="normal" label="Email Adress" variant="outlined" fullWidth
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                />
+                            label="Email Adress"
+                            variant="outlined"
+                            fullWidth
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+                    </Grid>
+                    <Grid item xs={12} >
+                        <TextField id="outlined-basic"
 
-                <TextField id="outlined-basic" margin="normal" label="Age" variant="outlined" fullWidth
-                    value={age}
-                    onChange={(e) => setAge(e.target.value)}
-                    required
-                />
+                            label="Age"
+                            variant="outlined"
+                            fullWidth
+                            value={age}
+                            onChange={(e) => setAge(e.target.value)}
+                            required
+                        />
+                    </Grid>
 
+                    <Grid item xs={12} >
+                        <TextField
+                            id="outlined-basic"
 
-                <TextField id="outlined-basic" margin="normal" label="Phone Number" variant="outlined" fullWidth
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
-                    required
-                />
+                            label="Phone Number"
+                            variant="outlined"
+                            fullWidth
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
+                            required
+                        />
+                    </Grid>
+                </Grid>
 
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '20px' }}>
                     <DateTimePicker
@@ -127,26 +155,30 @@ export default function Client({ showDeleteButton, setShowDeleteButton }) {
 
 
 
+
+
             </Paper>
 
 
 
 
-            <Paper elevation={3} style={paperStyle}>
+            <Paper elevation={3} style={paperStyleAppointment}>
 
-                
-                    <PendingActionsIcon fontSize='large' />
-            
+
+                <PendingActionsIcon fontSize='large' />
+
 
                 <Typography component="h1" variant="h5">
                     Clients
                 </Typography>
 
+               {/*<Appointments  clients={clients} />*/}
+
                 {clients.map(client => (
                     <Paper elevation={6} style={{ margin: "10px", padding: "15px", textAlign: "left" }} key={client.id}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                             <div>
-                                Id: {client.id}<br />
+                                
                                 Name: {client.name}<br />
                                 Age: {client.age}<br />
                                 Email: {client.email}<br />

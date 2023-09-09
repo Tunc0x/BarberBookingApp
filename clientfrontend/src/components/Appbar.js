@@ -8,18 +8,34 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import SignIn from './SignIn';
 import Client from './Client';
+import SignUp from './SignUp';
+import Appointments from './Appointments';
 
 export default function Appbar() {
   const [showSignIn, setShowSignIn] = useState(false);
   const [showClient, setShowClient] = useState(true);
   const [showDeleteButton, setShowDeleteButton] = useState(false);
   const [showLoginButton, setShowLoginButton] = useState(true);
+  const [showSignUp, setShowSignUp] = React.useState(false);
+  const [clients, setClients] = React.useState([])
+
+  
+  React.useEffect(() => {
+
+    fetch("http://localhost:8080/clients")
+        .then(res => res.json())
+        .then((result) => {
+            setClients(result);
+        }
+        )
+}, [])
 
 
 
   const handleLoginClick = () => {
     setShowSignIn(true);
     setShowClient(false);
+    setShowSignUp(false);
    
   } 
 
@@ -38,6 +54,22 @@ export default function Appbar() {
     setShowLoginButton(false);
   }
 
+  const handleMenuIconClick = () =>
+  {
+    if (showSignIn === true) {
+      setShowSignIn(false);
+      setShowClient(true);
+    }
+   
+  } 
+
+  const handleSignUpClick = () =>
+  {
+     setShowSignUp(true);
+     setShowSignIn(false);
+  };
+
+
 
 
   
@@ -54,7 +86,7 @@ export default function Appbar() {
             aria-label="menu"
             sx={{ mr: 2 }}
           >
-            <MenuIcon />
+            <MenuIcon onClick={handleMenuIconClick}/>
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Barber apppointment
@@ -72,8 +104,11 @@ export default function Appbar() {
         </Toolbar>
       </AppBar>
 
-      {showSignIn && <SignIn onLoginSubmit={handleLoginSubmitClick}/>}
+      {showSignIn && <SignIn onLoginSubmit={handleLoginSubmitClick} onSignUpClick={handleSignUpClick}/>}
       {showClient && <Client showDeleteButton={showDeleteButton} setShowDeleteButton={setShowDeleteButton}/>}
+      {showSignUp && <SignUp onLoginClick={handleLoginClick}/>}
+
+    
     
 
     </Box>
