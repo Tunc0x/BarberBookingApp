@@ -11,6 +11,9 @@ import Client from './Client';
 import SignUp from './SignUp';
 import Appointments from './Appointments';
 
+
+
+
 export default function Appbar() {
   const [showSignIn, setShowSignIn] = useState(false);
   const [showClient, setShowClient] = useState(true);
@@ -107,7 +110,7 @@ export default function Appbar() {
       {showSignIn && <SignIn onLoginSubmit={handleLoginSubmitClick} onSignUpClick={handleSignUpClick}/>}
       {showClient && <Client showDeleteButton={showDeleteButton} setShowDeleteButton={setShowDeleteButton}/>}
       {showSignUp && <SignUp onLoginClick={handleLoginClick}/>}
-
+       
     
     
 
