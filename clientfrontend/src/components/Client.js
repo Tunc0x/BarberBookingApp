@@ -32,7 +32,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 export default function Client({ showDeleteButton, setShowDeleteButton }) {
     const paperStyleClient = { padding: '50px 20px', width: 600, margin: "20px auto" }
-    const paperStyleAppointment = { padding: '30px 20px', width: 600, margin: "10px auto" }
+    const paperStyleAppointment = { padding: '30px 20px', width: 900, margin: "10px auto" }
     const paperStyleBarber = { padding: '50px 20px', width: 350, margin: "20px auto" }
 
     const [name, setName] = React.useState('')
@@ -57,7 +57,15 @@ export default function Client({ showDeleteButton, setShowDeleteButton }) {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(client)
-        }).then(() => { console.log("New Client added"); /*window.location.reload();*/ })
+        }).then(() => { console.log("New Client added"); /*window.location.reload(); */
+        const newClients = [...clients, client];
+        setClients(newClients);
+
+        
+    
+        
+    
+    })
     }
 
     const handleDeleteClick = (id) => {
@@ -261,9 +269,10 @@ export default function Client({ showDeleteButton, setShowDeleteButton }) {
                                 Clients
                             </Typography>
 
-                            {/*<Appointments  clients={clients} />*/}
-
-                            {clients.map(client => (
+                            <Appointments  clients={clients} setClients={setClients} ownerAccess={showDeleteButton}/>
+                          
+                            
+                            {/*clients.map(client => (
                                 <Paper elevation={6} style={{ margin: "10px", padding: "15px", textAlign: "left" }} key={client.id}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                                         <div>
@@ -284,7 +293,7 @@ export default function Client({ showDeleteButton, setShowDeleteButton }) {
 
                                     </div>
                                 </Paper>
-                            ))}
+                                        ))*/}
                         </Paper>
                     </Accordion>
                 </Grid>
