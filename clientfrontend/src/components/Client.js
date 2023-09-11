@@ -8,7 +8,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { Co2Sharp } from '@mui/icons-material';
+import { Co2Sharp, Girl } from '@mui/icons-material';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import dayjs from 'dayjs';
@@ -22,12 +22,17 @@ import Barber1Bild from '../Pictures/Barber1.jpg';
 import Barber2Bild from '../Pictures/Barber2.jpg';
 import '../Client.css';
 
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 
 
 
 export default function Client({ showDeleteButton, setShowDeleteButton }) {
     const paperStyleClient = { padding: '50px 20px', width: 600, margin: "20px auto" }
-    const paperStyleAppointment = { padding: '50px 20px', width: 600, margin: "20px auto" }
+    const paperStyleAppointment = { padding: '30px 20px', width: 600, margin: "10px auto" }
     const paperStyleBarber = { padding: '50px 20px', width: 350, margin: "20px auto" }
 
     const [name, setName] = React.useState('')
@@ -185,12 +190,12 @@ export default function Client({ showDeleteButton, setShowDeleteButton }) {
 
                             <Grid item xs={6}>
                                 <div>
-                                    <img className="hoverZoom" src={Barber1Bild} alt="Barber1" width="150" height="200" onClick={() => handleBarberClick("Jerry")} />
+                                    <img className={activeBarber === "Jerry" ? "hoverZoom activeZoom blueBorder" : "hoverZoom"} src={Barber1Bild} alt="Barber1" width="150" height="200" onClick={() => handleBarberClick("Jerry")} />
                                 </div>
                             </Grid>
                             <Grid item xs={6}>
                                 <div>
-                                    <img className="hoverZoom" src={Barber2Bild} alt="Barber1" width="150" height="200" onClick={() => handleBarberClick("Okan")} />
+                                    <img className={activeBarber === "Okan" ? "hoverZoom activeZoom blueBorder" : "hoverZoom"} src={Barber2Bild} alt="Barber1" width="150" height="200" onClick={() => handleBarberClick("Okan")} />
                                 </div>
                             </Grid>
 
@@ -220,47 +225,76 @@ export default function Client({ showDeleteButton, setShowDeleteButton }) {
 
 
                 </Grid>
+
+                <Grid item xs={12}>
+                    <Accordion>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                        >
+                            <Typography sx={{ width: '33%', flexShrink: 0 }}>
+                                Appointments
+                            </Typography>
+
+                            {showDeleteButton ? (
+                                <Typography sx={{ color: 'text.secondary' }}>
+                                    You are currently the owner
+                                </Typography>
+                            ) : (
+                                <Typography sx={{ color: 'text.secondary' }}>
+
+                                    You are currently not an owner
+                                </Typography>
+                            )}
+
+
+
+                        </AccordionSummary>
+                        <Paper elevation={3} style={paperStyleAppointment}>
+
+
+                            <PendingActionsIcon fontSize='large' />
+
+
+                            <Typography component="h1" variant="h5">
+                                Clients
+                            </Typography>
+
+                            {/*<Appointments  clients={clients} />*/}
+
+                            {clients.map(client => (
+                                <Paper elevation={6} style={{ margin: "10px", padding: "15px", textAlign: "left" }} key={client.id}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                                        <div>
+
+                                            Name: {client.name}<br />
+                                            Age: {client.age}<br />
+                                            Email: {client.email}<br />
+                                            Phone Number: {client.phoneNumber}<br />
+                                            Date Time: {client.appointmentDateTime}<br />
+                                        </div>
+
+                                        {showDeleteButton ? (
+
+                                            <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleDeleteClick(client.id)}>
+                                                Delete
+                                            </Button>
+                                        ) : null}
+
+                                    </div>
+                                </Paper>
+                            ))}
+                        </Paper>
+                    </Accordion>
+                </Grid>
+
             </Grid>
 
 
 
 
 
-            <Paper elevation={3} style={paperStyleAppointment}>
-
-
-                <PendingActionsIcon fontSize='large' />
-
-
-                <Typography component="h1" variant="h5">
-                    Clients
-                </Typography>
-
-                {/*<Appointments  clients={clients} />*/}
-
-                {clients.map(client => (
-                    <Paper elevation={6} style={{ margin: "10px", padding: "15px", textAlign: "left" }} key={client.id}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                            <div>
-
-                                Name: {client.name}<br />
-                                Age: {client.age}<br />
-                                Email: {client.email}<br />
-                                Phone Number: {client.phoneNumber}<br />
-                                Date Time: {client.appointmentDateTime}<br />
-                            </div>
-
-                            {showDeleteButton ? (
-
-                                <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleDeleteClick(client.id)}>
-                                    Delete
-                                </Button>
-                            ) : null}
-
-                        </div>
-                    </Paper>
-                ))}
-            </Paper>
 
 
         </Container>

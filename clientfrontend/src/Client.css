@@ -5,4 +5,15 @@
   .hoverZoom:hover {
     transform: scale(1.1);  
   }
+.activeZoom {
+    transform: scale(1.1); /* Sie können den Skalierungsfaktor ändern, um die Vergrößerung anzupassen */
+    transition: transform 0.3s; /* Sanfte Übergangsanimation */
+}
+
+.blueBorder{
+  border: 2px solid blue
+}
+
+
+
   
