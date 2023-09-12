@@ -50,23 +50,24 @@ export default function Client({ showDeleteButton, setShowDeleteButton }) {
         const appointmentDateTime = rawAppointmentDateTime.format('YYYY-MM-DDTHH:mm:ss')
         console.log(appointmentDateTime)
         const barber = activeBarber
-        
 
-        const client = { name, email, phoneNumber, age, appointmentDateTime,  barber}
+
+        const client = { name, email, phoneNumber, age, appointmentDateTime, barber }
         console.log(client)
         fetch("http://localhost:8080/clients", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(client)
-        }).then(() => { console.log("New Client added"); /*window.location.reload(); */
-        const newClients = [...clients, client];
-        setClients(newClients);
+        }).then(() => {
+            console.log("New Client added"); /*window.location.reload(); */
+            const newClients = [...clients, client];
+            setClients(newClients);
 
-        
-    
-        
-    
-    })
+
+
+
+
+        })
     }
 
     const handleDeleteClick = (id) => {
@@ -82,7 +83,22 @@ export default function Client({ showDeleteButton, setShowDeleteButton }) {
     const handleBarberClick = (barberName) => {
         setActiveBarber(barberName)
 
+
+
     }
+
+    const isInputValid = () => !isInputBlank() && isEmailValid() && isAgeValid() && isPhoneNumberValid();
+    
+
+    const isInputBlank = () => (name === '' || email === '' || age === '' || phoneNumber === ''); 
+
+    const isEmailValid = () => email.includes('@');
+    
+    const isAgeValid = () =>  /^\d+$/.test(age) && age > 5;
+
+    const isPhoneNumberValid = () => /^\d+$/.test(phoneNumber);
+
+    
 
     React.useEffect(() => {
 
@@ -177,7 +193,7 @@ export default function Client({ showDeleteButton, setShowDeleteButton }) {
                                 onChange={datetime => setRawAppointmentDateTime(datetime)}
                             />
 
-                            <Button variant="contained" onClick={handleClick}>
+                            <Button variant="contained" onClick={handleClick} disabled={!isInputValid()}>
                                 Submit
                             </Button>
                         </div>
@@ -270,9 +286,9 @@ export default function Client({ showDeleteButton, setShowDeleteButton }) {
                                 Clients
                             </Typography>
 
-                            <Appointments  clients={clients} setClients={setClients} ownerAccess={showDeleteButton}/>
-                          
-                            
+                            <Appointments clients={clients} setClients={setClients} ownerAccess={showDeleteButton} />
+
+
                             {/*clients.map(client => (
                                 <Paper elevation={6} style={{ margin: "10px", padding: "15px", textAlign: "left" }} key={client.id}>
                                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
