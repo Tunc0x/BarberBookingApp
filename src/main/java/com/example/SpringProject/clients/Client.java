@@ -28,6 +28,9 @@ public class Client {
 
     private LocalDateTime appointmentDateTime;
 
+
+    private String barber;
+
     public Long getId() {
         return id;
     }
@@ -75,5 +78,13 @@ public class Client {
 
     public void setAppointmentDateTime(LocalDateTime appointmentDateTime) {
         this.appointmentDateTime = appointmentDateTime;
+    }
+
+    public String getBarber() {
+        return barber;
+    }
+
+    public void setBarber(String barber) {
+        this.barber = barber;
     }
 }

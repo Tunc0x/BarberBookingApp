@@ -8,6 +8,10 @@ import TableRow from '@mui/material/TableRow';
 import Title from './Title';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Button } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import moment from 'moment';
+
+
 
 // Generate Order Data
 function createData(id, date, name, shipTo, paymentMethod, amount) {
@@ -23,7 +27,7 @@ function preventDefault(event) {
 
 
 export default function Appointments(props) {
-  
+
 
 
   React.useEffect(() => {
@@ -49,7 +53,7 @@ export default function Appointments(props) {
 
       const updatedClients = props.clients.filter(client => client.id !== id);
       props.setClients(updatedClients);
-      
+
     })
   }
 
@@ -66,26 +70,28 @@ export default function Appointments(props) {
             <TableCell><b>Age</b></TableCell>
             <TableCell><b>Email Adress</b></TableCell>
             <TableCell ><b>Phone Number</b></TableCell>
-            <TableCell align="right"><b>Barber</b></TableCell>
+            <TableCell><b>Barber</b></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {props.clients.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell>{row.appointmentDateTime}</TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.age}</TableCell>
-              <TableCell>{row.email}</TableCell>
-              <TableCell >{row.phoneNumber}</TableCell>
-              <TableCell >{row.Name}</TableCell>
-              {props.ownerAccess ? (
-
-                <Button variant="outlined" startIcon={<DeleteIcon />} onClick={() => handleDeleteClick(row.id)}>
-                  Delete
-                </Button>
-              ) : null}
-            </TableRow>
-          ))}
+        {props.clients.map((row) => {
+            let formattedDate = moment(row.appointmentDateTime).format('YYYY-MM-DD HH:mm');
+            return (
+              <TableRow key={row.id}>
+                <TableCell>{formattedDate}</TableCell>
+                <TableCell>{row.name}</TableCell>
+                <TableCell>{row.age}</TableCell>
+                <TableCell>{row.email}</TableCell>
+                <TableCell>{row.phoneNumber}</TableCell>
+                <TableCell>{row.barber}</TableCell>
+                {props.ownerAccess && (
+                  <IconButton aria-label="delete" onClick={() => handleDeleteClick(row.id)}>
+                    <DeleteIcon color='primary'/>
+                  </IconButton>
+                )}
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>

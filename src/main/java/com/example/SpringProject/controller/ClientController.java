@@ -100,6 +100,7 @@ public class ClientController {
         clientInstance.setPhoneNumber(clientUpdate.getPhoneNumber());
         clientInstance.setEmail(clientUpdate.getEmail());
         clientInstance.setAppointmentDateTime(clientUpdate.getAppointmentDateTime());
+        clientInstance.setBarber(clientUpdate.getBarber());
 
         clientRepository.save(clientInstance);
 

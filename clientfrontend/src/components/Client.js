@@ -49,9 +49,10 @@ export default function Client({ showDeleteButton, setShowDeleteButton }) {
 
         const appointmentDateTime = rawAppointmentDateTime.format('YYYY-MM-DDTHH:mm:ss')
         console.log(appointmentDateTime)
+        const barber = activeBarber
+        
 
-
-        const client = { name, email, phoneNumber, age, appointmentDateTime }
+        const client = { name, email, phoneNumber, age, appointmentDateTime,  barber}
         console.log(client)
         fetch("http://localhost:8080/clients", {
             method: "POST",
