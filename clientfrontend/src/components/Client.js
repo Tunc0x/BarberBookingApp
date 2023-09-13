@@ -43,6 +43,8 @@ export default function Client({ showDeleteButton, setShowDeleteButton }) {
 
     const [clients, setClients] = React.useState([])
     const [activeBarber, setActiveBarber] = React.useState("Jerry")
+    const [touchedFields, setTouchedFields] = React.useState({});
+
 
     const handleClick = (e) => {
         e.preventDefault()
@@ -62,11 +64,6 @@ export default function Client({ showDeleteButton, setShowDeleteButton }) {
             console.log("New Client added"); /*window.location.reload(); */
             const newClients = [...clients, client];
             setClients(newClients);
-
-
-
-
-
         })
     }
 
@@ -83,22 +80,30 @@ export default function Client({ showDeleteButton, setShowDeleteButton }) {
     const handleBarberClick = (barberName) => {
         setActiveBarber(barberName)
 
-
-
     }
 
     const isInputValid = () => !isInputBlank() && isEmailValid() && isAgeValid() && isPhoneNumberValid();
-    
 
-    const isInputBlank = () => (name === '' || email === '' || age === '' || phoneNumber === ''); 
+
+    const isInputBlank = () => (name === '' || email === '' || age === '' || phoneNumber === '');
 
     const isEmailValid = () => email.includes('@');
-    
-    const isAgeValid = () =>  /^\d+$/.test(age) && age > 5;
+
+    const isAgeValid = () => /^\d+$/.test(age) && age > 5;
 
     const isPhoneNumberValid = () => /^\d+$/.test(phoneNumber);
 
-    
+    const handleBlur = (field) => {
+        setTouchedFields(prevState => ({
+            ...prevState,
+            [field]: true
+        }));
+    };
+
+    const isBlank = (value) => {
+        return !value || value.trim() === '';
+    }
+
 
     React.useEffect(() => {
 
@@ -110,14 +115,11 @@ export default function Client({ showDeleteButton, setShowDeleteButton }) {
             )
     }, [])
 
-
-
-
+   
 
 
     return (
         <Container
-
             component="form"
             sx={{
                 '& > :not(style)': { m: 1, width: '130ch' },
@@ -127,6 +129,8 @@ export default function Client({ showDeleteButton, setShowDeleteButton }) {
         >
             <Grid container spacing={2}>
                 <Grid item xs={8} >
+                    <Booking/>
+
                     <Paper elevation={3} style={paperStyleClient}>
 
                         <CalendarMonthIcon fontSize='large' color='primary'></CalendarMonthIcon>
@@ -149,19 +153,22 @@ export default function Client({ showDeleteButton, setShowDeleteButton }) {
                             </Grid>
 
                             <Grid item xs={12}>
-                                <TextField
+                                <TextField onBlur={() => handleBlur("email")}
                                     id="outlined-basic"
-
                                     label="Email Adress"
                                     variant="outlined"
                                     fullWidth
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
+                                    error={touchedFields.email && !isBlank(email) && !isEmailValid()}
+                                    helperText={touchedFields.email && !isBlank(email) && !isEmailValid() ? "Incorrect entry." : ""}
+
+
                                 />
                             </Grid>
                             <Grid item xs={12} >
-                                <TextField id="outlined-basic"
+                                <TextField id="outlined-basic" onBlur={() => handleBlur("age")}
 
                                     label="Age"
                                     variant="outlined"
@@ -169,19 +176,22 @@ export default function Client({ showDeleteButton, setShowDeleteButton }) {
                                     value={age}
                                     onChange={(e) => setAge(e.target.value)}
                                     required
+                                    error={touchedFields.age && !isBlank(age) && !isAgeValid()}
+                                    helperText={touchedFields.age && !isBlank(age) && !isAgeValid() ? "Incorrect entry." : ""}
                                 />
                             </Grid>
 
                             <Grid item xs={12} >
-                                <TextField
+                                <TextField onBlur={() => handleBlur("phoneNumber")}
                                     id="outlined-basic"
-
                                     label="Phone Number"
                                     variant="outlined"
                                     fullWidth
                                     value={phoneNumber}
                                     onChange={(e) => setPhoneNumber(e.target.value)}
                                     required
+                                    error={touchedFields.phoneNumber && !isBlank(phoneNumber) && !isPhoneNumberValid()}
+                                    helperText={touchedFields.phoneNumber && !isBlank(phoneNumber) && !isPhoneNumberValid() ? "Incorrect entry." : ""}
                                 />
                             </Grid>
                         </Grid>
@@ -197,10 +207,6 @@ export default function Client({ showDeleteButton, setShowDeleteButton }) {
                                 Submit
                             </Button>
                         </div>
-
-
-
-
 
                     </Paper>
                 </Grid>
@@ -241,14 +247,8 @@ export default function Client({ showDeleteButton, setShowDeleteButton }) {
                                 </>
                             ) : null}
 
-
                         </Paper>
-
-
                     </Paper>
-
-
-
                 </Grid>
 
                 <Grid item xs={12}>
@@ -272,8 +272,6 @@ export default function Client({ showDeleteButton, setShowDeleteButton }) {
                                     You are currently not an owner
                                 </Typography>
                             )}
-
-
 
                         </AccordionSummary>
                         <Paper elevation={3} style={paperStyleAppointment}>
