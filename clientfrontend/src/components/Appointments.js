@@ -34,16 +34,16 @@ function preventDefault(event) {
 
 
 
-export default function Appointments(props) {
+export default function Appointments({appointments, setAppointments, ownerAccess}) {
   const paperStyleAppointment = { padding: '30px 20px', width: 900, margin: "10px auto" }
 
 
   React.useEffect(() => {
 
-    fetch("http://localhost:8080/clients")
+    fetch("http://localhost:8080/appointments")
       .then(res => res.json())
       .then((result) => {
-        props.setClients(result);
+        setAppointments(result);
       }
       )
   }, [])
@@ -53,14 +53,14 @@ export default function Appointments(props) {
 
     console.log(id)
 
-    fetch("http://localhost:8080/clients/" + id, {
+    fetch("http://localhost:8080/appointments/" + id, {
       method: "DELETE",
 
     }).then(() => {
-      console.log("Client deleted"); /*window.location.reload(); */
+      console.log("Appointment deleted"); /*window.location.reload(); */
 
-      const updatedClients = props.clients.filter(client => client.id !== id);
-      props.setClients(updatedClients);
+      const updatedAppointments = appointments.filter(appointment => appointment.id !== id);
+      setAppointments(updatedAppointments);
 
     })
   }
@@ -75,7 +75,7 @@ export default function Appointments(props) {
         <Typography sx={{ width: '33%', flexShrink: 0 }}>
           Appointments
         </Typography>
-        {props.ownerAccess ? (
+        {ownerAccess ? (
           <Typography sx={{ color: 'text.secondary' }}>
             You are currently the owner
           </Typography>
@@ -113,17 +113,17 @@ export default function Appointments(props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {props.clients.map((row) => {
-                let formattedDate = moment(row.appointmentDateTime).format('YYYY-MM-DD HH:mm');
+              {appointments.map((row) => {
+                let formattedDate = moment(row.dateTime).format('YYYY-MM-DD HH:mm');
                 return (
                   <TableRow key={row.id}>
                     <TableCell>{formattedDate}</TableCell>
-                    <TableCell>{row.name}</TableCell>
-                    <TableCell>{row.age}</TableCell>
-                    <TableCell>{row.email}</TableCell>
-                    <TableCell>{row.phoneNumber}</TableCell>
-                    <TableCell>{row.barber}</TableCell>
-                    {props.ownerAccess && (
+                    <TableCell>{row.client.name}</TableCell>
+                    <TableCell>{row.client.age}</TableCell>
+                    <TableCell>{row.client.email}</TableCell>
+                    <TableCell>{row.client.phoneNumber}</TableCell>
+                    <TableCell>{row.barber.name}</TableCell>
+                    {ownerAccess && (
                       <IconButton aria-label="delete" onClick={() => handleDeleteClick(row.id)}>
                         <DeleteIcon color='primary' />
                       </IconButton>

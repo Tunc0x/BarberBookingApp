@@ -10,18 +10,18 @@ import ChooseBarber from './ChooseBarber';
 
 
 
-export default function Client({ showDeleteButton, setShowDeleteButton }) {
+export default function Client({ showDeleteButton, setShowDeleteButton, isLoggedIn, loggedInAccount}) {
 
   
 
-    const [clients, setClients] = React.useState([])
-    const [activeBarber, setActiveBarber] = React.useState("Jerry")
+    const [appointments, setAppointments] = React.useState([])
+    const [activeBarber, setActiveBarber] = React.useState({id: 1, name: "Jerry Johnson"})
 
     React.useEffect(() => {
-        fetch("http://localhost:8080/clients")
+        fetch("http://localhost:8080/appointments")
             .then(res => res.json())
             .then((result) => {
-                setClients(result);
+                setAppointments(result);
             })
     }, [])
 
@@ -37,13 +37,19 @@ export default function Client({ showDeleteButton, setShowDeleteButton }) {
         >
             <Grid container spacing={2}>
                 <Grid item xs={8} >
-                    <Booking activeBarber={activeBarber} clients={clients} setClients={setClients} />
+                    <Booking activeBarber={activeBarber} 
+                    appointments={appointments} 
+                    setAppointments={setAppointments} 
+                    showDeleteButton={showDeleteButton} 
+                    setShowDeleteButton={setShowDeleteButton} 
+                    isLoggedIn={isLoggedIn} 
+                    loggedInAccount={loggedInAccount}/>
                 </Grid>
                 <Grid item xs={4}>
                     <ChooseBarber activeBarber={activeBarber} setActiveBarber={setActiveBarber} />
                 </Grid>
                 <Grid item xs={12}>
-                    <Appointments clients={clients} setClients={setClients} ownerAccess={showDeleteButton} />
+                    <Appointments appointments={appointments} setAppointments={setAppointments} ownerAccess={showDeleteButton} />
                 </Grid>
             </Grid>
         </Container>

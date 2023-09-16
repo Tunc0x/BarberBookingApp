@@ -33,7 +33,7 @@ public class OwnerController {
             Optional<Owner> optionalOwner = ownerRepository.findOwnerByEmail(loginRequest.getEmail());
             if(optionalOwner.isEmpty())
             {
-               throw new IllegalArgumentException();
+               return false;
             }
 
 

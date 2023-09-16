@@ -18,20 +18,24 @@ export default function Appbar() {
   const [showSignIn, setShowSignIn] = useState(false);
   const [showClient, setShowClient] = useState(true);
   const [showDeleteButton, setShowDeleteButton] = useState(false);
-  const [showLoginButton, setShowLoginButton] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showSignUp, setShowSignUp] = React.useState(false);
-  const [clients, setClients] = React.useState([])
+  const [clients, setClients] = React.useState([]);
+   //Hier sind die Daten des Benutzers gespeichert.
+  const [loggedInAccount, setLoggedInAccount] = React.useState({});
 
-  
+
+ 
+
   React.useEffect(() => {
 
     fetch("http://localhost:8080/clients")
-        .then(res => res.json())
-        .then((result) => {
-            setClients(result);
-        }
-        )
-}, [])
+      .then(res => res.json())
+      .then((result) => {
+        setClients(result);
+      }
+      )
+  }, [])
 
 
 
@@ -39,43 +43,46 @@ export default function Appbar() {
     setShowSignIn(true);
     setShowClient(false);
     setShowSignUp(false);
-   
-  } 
-
-  const handleLogoutClick = () => 
-  {
-    setShowDeleteButton(false);
-    setShowLoginButton(true);
 
   }
 
-  const handleLoginSubmitClick = (isOwnerAuthenticated) =>
-  {
+  const handleLogoutClick = () => {
+    setShowDeleteButton(false);
+    setIsLoggedIn(false);
+
+  }
+
+  const handleLoginSubmitClick = (isOwnerAuthenticated, accountData) => {
     setShowSignIn(false);
     setShowClient(true);
     setShowDeleteButton(isOwnerAuthenticated);
-    setShowLoginButton(false);
+    setIsLoggedIn(true);
+    if(accountData !== null)
+    {
+      setLoggedInAccount(accountData);
+    }
+    
   }
 
-  const handleMenuIconClick = () =>
-  {
+
+
+  const handleMenuIconClick = () => {
     if (showSignIn === true) {
       setShowSignIn(false);
       setShowClient(true);
     }
-   
-  } 
 
-  const handleSignUpClick = () =>
-  {
-     setShowSignUp(true);
-     setShowSignIn(false);
+  }
+
+  const handleSignUpClick = () => {
+    setShowSignUp(true);
+    setShowSignIn(false);
   };
 
 
 
 
-  
+
 
 
   return (
@@ -89,30 +96,30 @@ export default function Appbar() {
             aria-label="menu"
             sx={{ mr: 2 }}
           >
-            <MenuIcon onClick={handleMenuIconClick}/>
+            <MenuIcon onClick={handleMenuIconClick} />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             Barber apppointment
           </Typography>
-          
-          
-          { showLoginButton ?(
 
-          
-          <Button color="inherit" onClick={handleLoginClick}>Login</Button>
 
-        ) : <Button color="inherit" onClick={handleLogoutClick}>Logout</Button>}
+          {isLoggedIn ? (
+
+            <Button color="inherit" onClick={handleLogoutClick}>Logout</Button>
+
+
+          ) : <Button color="inherit" onClick={handleLoginClick}>Login</Button>}
 
 
         </Toolbar>
       </AppBar>
 
-      {showSignIn && <SignIn onLoginSubmit={handleLoginSubmitClick} onSignUpClick={handleSignUpClick}/>}
-      {showClient && <Client showDeleteButton={showDeleteButton} setShowDeleteButton={setShowDeleteButton}/>}
-      {showSignUp && <SignUp onLoginClick={handleLoginClick}/>}
-       
-    
-    
+      {showSignIn && <SignIn onLoginSubmit={handleLoginSubmitClick} onSignUpClick={handleSignUpClick} />}
+      {showClient && <Client showDeleteButton={showDeleteButton} setShowDeleteButton={setShowDeleteButton} isLoggedIn={isLoggedIn} loggedInAccount={loggedInAccount} />}
+      {showSignUp && <SignUp onLoginClick={handleLoginClick} />}
+
+
+
 
     </Box>
   );

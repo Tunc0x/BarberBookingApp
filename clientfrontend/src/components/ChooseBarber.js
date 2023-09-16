@@ -10,10 +10,12 @@ import '../Client.css';
 
 export default function ChooseBarber({activeBarber, setActiveBarber}) {
     const paperStyleBarber = { padding: '50px 20px', width: 350, margin: "20px auto" }
-    const handleBarberClick = (barberName) => {
-        setActiveBarber(barberName)
+    const handleBarberClick = (barber) => {
+        setActiveBarber(barber);
 
     }
+
+    
 
 
 
@@ -29,25 +31,25 @@ export default function ChooseBarber({activeBarber, setActiveBarber}) {
 
                 <Grid item xs={6}>
                     <div>
-                        <img className={activeBarber === "Jerry" ? "hoverZoom activeZoom blueBorder" : "hoverZoom"} src={Barber1Bild} alt="Barber1" width="150" height="200" onClick={() => handleBarberClick("Jerry")} />
+                        <img className={activeBarber.name === "Jerry Johnson" ? "hoverZoom activeZoom blueBorder" : "hoverZoom"} src={Barber1Bild} alt="Barber1" width="150" height="200" onClick={() => handleBarberClick({id: 1, name: "Jerry Johnson"})} />
                     </div>
                 </Grid>
                 <Grid item xs={6}>
                     <div>
-                        <img className={activeBarber === "Okan" ? "hoverZoom activeZoom blueBorder" : "hoverZoom"} src={Barber2Bild} alt="Barber1" width="150" height="200" onClick={() => handleBarberClick("Okan")} />
+                        <img className={activeBarber.name === "Okan Yaman" ? "hoverZoom activeZoom blueBorder" : "hoverZoom"} src={Barber2Bild} alt="Barber1" width="150" height="200" onClick={() => handleBarberClick({id: 2, name: "Okan Yaman"})} />
                     </div>
                 </Grid>
 
             </Grid>
 
             <Paper elevation={6} style={paperStyleBarber}>
-                {activeBarber === "Jerry" ? (
+                {activeBarber.name === "Jerry Johnson" ? (
                     <>
                         <b>Jerry Johnson</b>
                         <br />
                         OWNER / HAIR SPECIALIST
                     </>
-                ) : activeBarber === "Okan" ? (
+                ) : activeBarber.name === "Okan Yaman" ? (
                     <>
                         <b>Okan Yaman</b>
                         <br />

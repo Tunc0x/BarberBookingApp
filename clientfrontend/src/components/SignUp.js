@@ -31,13 +31,38 @@ function Copyright(props) {
 const defaultTheme = createTheme();
 
 export default function SignUp(props) {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+
+  const [name, setName] = React.useState('')
+  const [email, setEmail] = React.useState('')
+  const [age, setAge] = React.useState('')
+  const [phoneNumber, setPhoneNumber] = React.useState('')
+  const [password, setPassword] = React.useState('')
+
+
+
+
+
+
+
+  const handleSubmit = (e) => {
+ 
+    e.preventDefault()
+
+    const client = { name, email, phoneNumber, age, password }
+    console.log(client)
+    fetch("http://localhost:8080/clients", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(client)
+    }).then(() => {
+      console.log("New Client added"); /*window.location.reload(); */
+     
+    })
+
+
+
+
+
   };
 
   return (
@@ -46,7 +71,7 @@ export default function SignUp(props) {
         <CssBaseline />
         <Box
           sx={{
-            marginTop: 8,
+            marginTop: 4,
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
@@ -63,43 +88,63 @@ export default function SignUp(props) {
               <Grid item xs={12} sm={6}>
                 <TextField
                   autoComplete="given-name"
-                  name="firstName"
+                  name="fullName"
                   required
                   fullWidth
-                  id="firstName"
-                  label="First Name"
+                  value={name}
+                  id="fullName"
+                  label="Full Name"
                   autoFocus
+                  onChange={(e) => setName(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
                   required
                   fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
+                  value={age}
+                  id="age"
+                  label="Age"
+                  name="age"
+                  autoComplete="age"
+                  onChange={(e) => setAge(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
+                  value={phoneNumber}
+                  id="phoneNumber"
+                  label="Phone Number"
+                  name="phoneNumber"
+                  autoComplete="phoneNumber"
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  value={email}
                   id="email"
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
+                  value={password}
                   name="password"
                   label="Password"
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>

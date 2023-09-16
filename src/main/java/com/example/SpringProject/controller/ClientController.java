@@ -1,6 +1,8 @@
 package com.example.SpringProject.controller;
 
 import com.example.SpringProject.clients.Client;
+import com.example.SpringProject.clients.LoginRequest;
+import com.example.SpringProject.clients.Owner;
 import com.example.SpringProject.error.EntityNotFoundException;
 import com.example.SpringProject.error.DuplicateEntryException;
 import com.example.SpringProject.repository.ClientRepository;
@@ -13,6 +15,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -29,29 +33,19 @@ public class ClientController {
     }
 
     @PostMapping("") // RequestBody -> Informationen im Body werden gelesen und wird in das Java Object Client konvertiert
-    public ResponseEntity<String> createClient(@Valid @RequestBody Client client) throws DuplicateEntryException {
+    public ResponseEntity<Map<String, Object>> createClient(@Valid @RequestBody Client client) throws DuplicateEntryException {
         Optional<Client> refClient = clientRepository.findClientByEmail(client.getEmail());
 
         if(refClient.isPresent())
         {
-
             throw new DuplicateEntryException("Email already exists.");
+        } else {
+            Client savedClient =  clientRepository.save(client);
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "The appointment was booked for the client.");
+            response.put("clientId", savedClient.getId());
 
-        }
-
-        refClient =  clientRepository.findClientByAppointmentDateTime(client.getAppointmentDateTime());
-        if(refClient.isPresent())
-        {
-
-            throw new DuplicateEntryException("This date is already reserved.");
-
-
-        }
-
-        else
-        {
-            clientRepository.save(client);
-            return new ResponseEntity<>("The appointment was booked for the client.", HttpStatus.CREATED);
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
         }
 
 
@@ -73,7 +67,7 @@ public class ClientController {
         return clientRepository.findAll();
     }
 
-    @GetMapping("/appointments/{appointmentDateTime}")     // Mit PathVariable sagen wir Spring, dass es in unserem Pfad nachschauen soll.
+ /*   @GetMapping("/appointments/{appointmentDateTime}")     // Mit PathVariable sagen wir Spring, dass es in unserem Pfad nachschauen soll.
     public Client readClient(@PathVariable LocalDateTime clientAppointmentDateTime)
     {
         Optional<Client> client = clientRepository.findClientByAppointmentDateTime(clientAppointmentDateTime);
@@ -82,7 +76,7 @@ public class ClientController {
             return client.get();
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No date is set for this time");
-    }
+    } */
 
 
 
@@ -99,8 +93,7 @@ public class ClientController {
         clientInstance.setAge(clientUpdate.getAge());
         clientInstance.setPhoneNumber(clientUpdate.getPhoneNumber());
         clientInstance.setEmail(clientUpdate.getEmail());
-        clientInstance.setAppointmentDateTime(clientUpdate.getAppointmentDateTime());
-        clientInstance.setBarber(clientUpdate.getBarber());
+
 
         clientRepository.save(clientInstance);
 
@@ -116,6 +109,49 @@ public class ClientController {
             return;
         }
         throw new EntityNotFoundException("Client with this id not found");
+
+    }
+
+
+    @PostMapping("/loginValid")
+    public boolean isClientLoginValid(@RequestBody LoginRequest loginRequest)
+    {
+        Optional<Client> optionalClient = clientRepository.findClientByEmail(loginRequest.getEmail());
+        if(optionalClient.isEmpty())
+        {
+            return false;
+        }
+
+
+        Client client = optionalClient.get();
+        if((client.getPassword()).equals(loginRequest.getPassword()))
+        {
+            return true;
+        }
+
+        return false;
+
+    }
+
+
+
+    @PostMapping("/login")
+    public Client ClientLogin(@RequestBody LoginRequest loginRequest)
+    {
+        Optional<Client> optionalClient = clientRepository.findClientByEmail(loginRequest.getEmail());
+        if(optionalClient.isEmpty())
+        {
+            return null;
+        }
+
+
+        Client client = optionalClient.get();
+        if((client.getPassword()).equals(loginRequest.getPassword()))
+        {
+            return client;
+        }
+
+        return null;
 
     }
 

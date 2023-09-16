@@ -2,7 +2,8 @@ package com.example.SpringProject.clients;
 
 
 import jakarta.persistence.*;
-
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 
 
 @Entity
@@ -14,6 +15,8 @@ public class Owner {
     @SequenceGenerator(name = "owner_seq_gen", sequenceName = "owner_seq", allocationSize = 1, initialValue = 1)
     private Long id;
 
+    @Email(message = "Please provide a valid email address")
+    @NotBlank(message = "Email Adress may not be blank")
     private String email;
 
     private String password;

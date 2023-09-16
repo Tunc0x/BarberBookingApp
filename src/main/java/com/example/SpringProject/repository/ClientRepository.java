@@ -18,7 +18,7 @@ public interface ClientRepository extends CrudRepository<Client, Long> {
   //  @Query("SELECT c FROM Client c WHERE c.email = ?")
     Optional<Client> findClientByEmail(String email);
 
-    Optional<Client> findClientByAppointmentDateTime(LocalDateTime appointmentDateTime);
+
 
 
 

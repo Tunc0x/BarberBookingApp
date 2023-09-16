@@ -25,7 +25,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 function Copyright(props) {
 
-  
+
 
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -46,7 +46,7 @@ let ownerAccess;
 const defaultTheme = createTheme();
 
 export default function SignIn(props) {
-  
+
 
 
 
@@ -54,41 +54,65 @@ export default function SignIn(props) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
-    const email = data.get('email')
-    const password = data.get('password')
+    const email = data.get('email');
+    const password = data.get('password');
 
-    const loginRequest = { email, password }
-    console.log(loginRequest)
+    const loginRequest = { email, password };
+    console.log(loginRequest);
 
     fetch("http://localhost:8080/owner/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(loginRequest)
-    }).then(response => response.json()).then(isValidLogin => {
+    })
+      .then(response => response.json())
+      .then(isValidLogin => {
+        console.log("Owner Login valid:", isValidLogin);
+        let ownerAccess;  // Initialisieren Sie die Variable hier
+        isValidLogin = JSON.stringify(isValidLogin)
+        if (isValidLogin === "true") {
+          console.log("Owner access granted");
+          ownerAccess = true;
+          props.onLoginSubmit(ownerAccess, null);
+        } else {
+          fetch("http://localhost:8080/clients/loginValid", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(loginRequest)
+          })
+            .then(response => response.json())
+            .then(isValidClientLogin => {
+              console.log("Client Login valid:", isValidClientLogin);
+              isValidClientLogin = JSON.stringify(isValidClientLogin)
+              if (isValidClientLogin === "true") { // Hier muss ich die fetch anfrage /login setzen, um den entsprechenden Client zu bekommen und diese Daten speichern zu können
+                console.log("Client access granted");
+                ownerAccess = false;
+                fetch("http://localhost:8080/clients/login", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(loginRequest)
+                })
+                  .then(response => response.json())
+                  .then(Client => {
 
-      console.log("Login valid:", isValidLogin)
-      if (isValidLogin) {
-        console.log("access granted")
-        ownerAccess = true;
+                    props.onLoginSubmit(ownerAccess, Client);
+                    console.log(Client);
+                  })
 
-        props.onLoginSubmit(true)
-
-
-      } else {
-        console.log("access denied")
-        ownerAccess = false;
-        props.onLoginSubmit(true)
-      }
-
-    }).catch(error => {
-      console.error("There was a fetch call error:", error);
-    });
-
-
-
+              
+              } else {
+                console.log("access denied");
+              }
+            })
+        }
+      })
+      .catch(error => {
+        console.error("There was a fetch call error:", error);
+      });
   };
-  
-  
+
+
+
   return (
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">

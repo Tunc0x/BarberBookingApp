@@ -24,12 +24,26 @@ public class Client {
     @Positive(message = "Age should be positive")
     private int age;
 
+    @Email(message = "Please provide a valid email address")
+    @NotBlank(message = "Email Adress may not be blank")
     private String email;
+    private String password;
 
-    private LocalDateTime appointmentDateTime;
+    //  private LocalDateTime appointmentDateTime;
 
 
-    private String barber;
+    //  private String barber;
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+
+
 
     public Long getId() {
         return id;
@@ -72,19 +86,11 @@ public class Client {
         this.email = email;
     }
 
-    public LocalDateTime getAppointmentDateTime() {
-        return appointmentDateTime;
-    }
 
-    public void setAppointmentDateTime(LocalDateTime appointmentDateTime) {
-        this.appointmentDateTime = appointmentDateTime;
-    }
 
-    public String getBarber() {
-        return barber;
-    }
 
-    public void setBarber(String barber) {
-        this.barber = barber;
-    }
+
+
+
+
 }
