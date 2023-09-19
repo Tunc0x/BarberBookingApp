@@ -53,6 +53,17 @@ public class Appointment {
         this.barber = barber;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        Appointment testAppointment = (Appointment)obj;
+
+        return testAppointment.getId().equals(this.getId());
+
+
+
+
+    }
+
 
 
 

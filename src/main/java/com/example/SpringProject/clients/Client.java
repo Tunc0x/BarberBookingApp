@@ -86,6 +86,18 @@ public class Client {
         this.email = email;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        Client testClient = (Client)obj;
+
+        return testClient.getId().equals(this.getId());
+
+
+
+
+    }
+
+
 
 
 

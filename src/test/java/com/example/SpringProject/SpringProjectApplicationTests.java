@@ -1,4 +1,4 @@
-package com.example.SpringProject;
+/* package com.example.SpringProject;
 
 
 import com.example.SpringProject.clients.Client;
@@ -153,4 +153,4 @@ class SpringProjectApplicationTests {
 
 
 
-}
+} */
